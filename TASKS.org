@@ -1,0 +1,5 @@
+* Initial tasklist
+- [X] Setup libgdx project
+- [ ] Basic screen classes, battlefield screen
+- [ ] "floater" interface: handles ships, bullets, asteroids, etc.
+- [ ] Trivial ship class, trivial bullet class
