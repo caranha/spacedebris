@@ -1,66 +1,126 @@
 package org.castelodelego.spacedebris;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.castelodelego.spacedebris.battlescene.BattleScreen;
 
-public class GdxGameMain implements ApplicationListener {
-	private OrthographicCamera camera;
-	private SpriteBatch batch;
-	private Texture texture;
-	private Sprite sprite;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class GdxGameMain extends Game {
+
+	static int SCREEN_NUMBER = 3;
+	static int SCREEN_SPLASH = 0;
+	static int SCREEN_MAIN = 1;
+	static int SCREEN_BATTLE = 2;
+	
+	static Screen[] screenlist;
+	static AssetManager manager;
+	
+	static int nextscreen;
+	static boolean changescreen;
+	
+	// Debug text display
+	BitmapFont debugtext;
+	SpriteBatch batch;
 	
 	@Override
 	public void create() {		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		screenlist = new Screen[SCREEN_NUMBER];
+		screenlist[SCREEN_SPLASH] = new SplashScreen(SCREEN_SPLASH);
+		screenlist[SCREEN_BATTLE] = new BattleScreen();
 		
-		camera = new OrthographicCamera(1, h/w);
+		queueAssets();
+		setScreen(screenlist[SCREEN_SPLASH]);
+		
+		nextscreen = SCREEN_SPLASH;
+		changescreen = false;
+		
+		debugtext = new BitmapFont();
 		batch = new SpriteBatch();
-		
-		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);
-		
-		sprite = new Sprite(region);
-		sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
 	}
 
 	@Override
 	public void dispose() {
-		batch.dispose();
-		texture.dispose();
+		debugtext.dispose();
+		super.dispose();
 	}
 
 	@Override
+	/**
+	 * Global Render call for "game". Things rendering here should be rendered in any screen.
+	 * TODO: Test if this is true;
+	 */
 	public void render() {		
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		if (changescreen)
+		{
+			changescreen = false;
+			setScreen(screenlist[nextscreen]);
+		}
 		
-		batch.setProjectionMatrix(camera.combined);
+		super.render();
+		
+		
+		// Rendering here renders above everything else
+		// Good for rendering debug info
 		batch.begin();
-		sprite.draw(batch);
+		debugtext.setColor(Color.YELLOW);
+		debugtext.draw(batch, "FPS: "+Gdx.graphics.getFramesPerSecond(), 5, 795);
 		batch.end();
+		
 	}
 
-	@Override
-	public void resize(int width, int height) {
-	}
+	
+	/**
+	 * Creates the assed manager and queue all assets for loading
+	 */
+	private void queueAssets()
+	{
+		manager = new AssetManager();
+		
+		// Do manage.load everything here
 
-	@Override
-	public void pause() {
 	}
-
-	@Override
-	public void resume() {
+	
+	/**
+	 * static method for changing screens
+	 * @param index - internal number of the screen to switch to.
+	 */
+	static public void setScreen(int index)
+	{
+		changescreen = true;
+		nextscreen = index;
 	}
+	
+	/**
+	 * Returns a screen for direct manipulation
+	 * (still needs to be cast on the other side, and the other side needs to know what kind of screen it is)
+	 * TODO: make a new screen interface with a "reset" function
+	 * @param index
+	 * @return
+	 */
+	static public Screen getScreen(int index)
+	{
+		return screenlist[index];
+	}
+	
+	
+	/*
+	 * The methods below are super-methods for Game. I can override 
+	 * this methods as needed to create behaviors that are done in all screens.
+	 */
+//	@Override
+//	public void resize(int width, int height) {
+//	}
+//
+//	@Override
+//	public void pause() {
+//	}
+//
+//	@Override
+//	public void resume() {
+//	}
 }
