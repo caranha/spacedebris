@@ -1,5 +1,15 @@
+
+* Implementing ships and bullets:
+  Goal: To have generic ships flying on the screen, shooting bullets at each other.
+  - [X] Simple bullet class: has an id, a time to die, fixed direction and velocity
+  - [X] Generic Ship - moves around slowly, randomly. Randomly creates
+    bullets. Change color if colliding with a bullet.
+  - [ ] Bullet list on BattleContex
+  - [ ] Render all this
+  - [ ] Simple bullet sprite.
+
 * Initial tasklist
 - [X] Setup libgdx project
 - [X] Basic screen classes, battlefield screen
-- [ ] "floater" interface: handles ships, bullets, asteroids, etc.
+- [X] "floater" interface: handles ships, bullets, asteroids, etc.
 - [ ] Trivial ship class, trivial bullet class
