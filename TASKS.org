@@ -4,7 +4,8 @@
   - [X] Simple bullet class: has an id, a time to die, fixed direction and velocity
   - [X] Generic Ship - moves around slowly, randomly. Randomly creates
     bullets. Change color if colliding with a bullet.
-  - [ ] Bullet list on BattleContex
+  - [ ] Bullet list on BattleContext
+  - [ ] Updater on BattleContext
   - [ ] Render all this
   - [ ] Simple bullet sprite.
 

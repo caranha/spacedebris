@@ -1,13 +1,39 @@
 package org.castelodelego.spacedebris.battlescene;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 
+/**
+ * The battle screen is the game screen that is active during a battle. It includes handlers for the interface, for the input, and for the battle manager
+ * @author caranha
+ *
+ */
 public class BattleScreen implements Screen {
 
+	BattleManager bm;
+	
+	public BattleScreen()
+	{
+		bm = new BattleManager();
+		bm.debugInit();
+	}
+	
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
-
+		
+		// dealing with input and interface
+		
+		// sending imput to the battle manager
+		// asking the Battle Screen to update the game logic
+		
+		/*-- RENDERING BLOCK --*/
+		// clearing the screen
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		// rendering the Battle Screen
+		bm.render(delta);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package org.castelodelego.spacedebris;
 
 import org.castelodelego.spacedebris.battlescene.BattleScreen;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -41,6 +42,8 @@ public class GdxGameMain extends Game {
 		
 		debugtext = new BitmapFont();
 		batch = new SpriteBatch();
+		
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 	}
 
 	@Override
