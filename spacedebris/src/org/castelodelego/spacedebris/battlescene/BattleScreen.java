@@ -16,7 +16,7 @@ public class BattleScreen implements Screen {
 	public BattleScreen()
 	{
 		bm = new BattleManager();
-		bm.debugInit();
+		bm.debugInit(1000);
 	}
 	
 	@Override
@@ -25,7 +25,9 @@ public class BattleScreen implements Screen {
 		// dealing with input and interface
 		
 		// sending imput to the battle manager
-		// asking the Battle Screen to update the game logic
+		
+		/*-- UPDATE BLOCK --*/
+		bm.update(delta);
 		
 		/*-- RENDERING BLOCK --*/
 		// clearing the screen

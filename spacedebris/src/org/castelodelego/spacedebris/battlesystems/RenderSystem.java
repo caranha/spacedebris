@@ -60,7 +60,6 @@ public class RenderSystem {
 		ComponentCollBox rectangle = null;		
 		for (int i = 0; i < list.size(); i++)
 		{
-			Gdx.app.debug("", "Entity no: "+i);
 			// getting the necessary components from the entity
 			renderer = (ComponentRender) list.get(i).getComponentByType(ComponentType.COMP_RENDER);
 			rectangle = (ComponentCollBox) list.get(i).getComponentByType(ComponentType.COMP_COLLBOX);

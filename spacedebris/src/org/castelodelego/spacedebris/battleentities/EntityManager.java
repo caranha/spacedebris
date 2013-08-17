@@ -1,6 +1,7 @@
 package org.castelodelego.spacedebris.battleentities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.castelodelego.spacedebris.battlecomponents.ComponentType;
 
@@ -47,5 +48,15 @@ public class EntityManager {
 			}
 		
 		return ret;
+	}
+	
+	/**
+	 * Returns an iterator to the internal list of this entity list
+	 * TODO: Maybe this is opening the internals of this object too much??
+	 * @return
+	 */
+	public Iterator<Entity> iterator()
+	{
+		return entitylist.iterator();
 	}
 }

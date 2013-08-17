@@ -8,6 +8,7 @@ public class ComponentDirection implements ComponentInterface {
 	
 	public ComponentDirection(float x, float y)
 	{
+		dir = new Vector2();
 		dir.x = x;
 		dir.y = y;
 	}

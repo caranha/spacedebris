@@ -6,9 +6,12 @@ package org.castelodelego.spacedebris.battlecomponents;
  *
  */
 public enum ComponentType {
-		COMP_POS, 
-		COMP_DIR, 
-		COMP_TEAM, 
-		COMP_RENDER, 
-		COMP_COLLBOX
+		COMP_POS, // indicates that this component has a position in the battle space
+		COMP_DIR, // indicates that this component is moving, and adds a velocity
+		COMP_TEAM, // indicates that this component has a team, and interacts with opposite teams upon collision
+		COMP_RENDER, // indicates that this component must be renderable
+		COMP_COLLBOX, // an AABB
+		
+		COMP_KILL, // indicates that this entity must be removed from the game
+		COMP_TIMER, // after the timer is done, adds and removes the list of components
 }

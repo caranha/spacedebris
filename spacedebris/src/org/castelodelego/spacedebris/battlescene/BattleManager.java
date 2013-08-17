@@ -1,11 +1,19 @@
 package org.castelodelego.spacedebris.battlescene;
 
+import java.util.Random;
+
 import org.castelodelego.spacedebris.Constants;
 import org.castelodelego.spacedebris.battlecomponents.ComponentCollBox;
+import org.castelodelego.spacedebris.battlecomponents.ComponentDirection;
+import org.castelodelego.spacedebris.battlecomponents.ComponentPosition;
 import org.castelodelego.spacedebris.battlecomponents.ComponentRender;
 import org.castelodelego.spacedebris.battleentities.Entity;
+import org.castelodelego.spacedebris.battleentities.EntityFactory;
 import org.castelodelego.spacedebris.battleentities.EntityManager;
+import org.castelodelego.spacedebris.battlesystems.KillSystem;
+import org.castelodelego.spacedebris.battlesystems.MoveSystem;
 import org.castelodelego.spacedebris.battlesystems.RenderSystem;
+import org.castelodelego.spacedebris.battlesystems.TriggerSystem;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -26,51 +34,56 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class BattleManager {
 
+	// systems
 	RenderSystem renderer;
+	MoveSystem mover;
+	KillSystem killer;
+	TriggerSystem timer;
+	
+	// entities
 	EntityManager entityman;
+	
 	
 	public BattleManager()
 	{
 		entityman = new EntityManager();
 		
-		// TODO: These values are actually how much of the battle space I am seeing. They don't need to be the same as the size of my screen (but should be the same proportion)
-		renderer = new RenderSystem(Constants.SCREEN_W,Constants.SCREEN_H);
+		
+		mover = new MoveSystem();
+		killer = new KillSystem();
+		timer = new TriggerSystem();
+		
+		
+		renderer = new RenderSystem(Constants.SCREEN_W,Constants.SCREEN_H); // TODO: Decide appropriate values for these Width/Height constants;
 	}
 	
 	/**
-	 * Dummy initialization for testing purposes
+	 * Create a random number of bullets
 	 */
-	public void debugInit()
+	public void debugInit(int n)
 	{
-		Entity a;
-		a = new Entity();
-		a.addComponent(new ComponentCollBox(10, 10, new Vector2(200,100)));
-		a.addComponent(new ComponentRender(ComponentRender.TYPE_WIREBOX, Color.WHITE, ""));
-		entityman.addEntity(a);
+		Vector2 pos = new Vector2();
+		Vector2 dir = new Vector2();
+		Random dice = new Random();
+		for (int i = 0; i < n; i++)
+		{
+			pos.x = dice.nextInt(200)+100;
+			pos.y = dice.nextInt(300)+100;
+			float orient = (float) (dice.nextFloat()*Math.PI*2);
+			float speed = (dice.nextFloat()*30)+1;
+			dir.x = (float) (Math.cos(orient)*speed);
+			dir.y = (float) (Math.sin(orient)*speed);
+			entityman.addEntity(EntityFactory.createBullet(pos, dir, dice.nextInt(10)+5, dice.nextFloat()*5+0.5f));
+		}
 		
-		a = new Entity();
-		a.addComponent(new ComponentCollBox(10, 10, new Vector2(100,100)));
-		entityman.addEntity(a);
-		
-		a = new Entity();
-		a.addComponent(new ComponentCollBox(10, 10, new Vector2(100,200)));
-		a.addComponent(new ComponentRender(ComponentRender.TYPE_WIREBOX, Color.GREEN, ""));
-		entityman.addEntity(a);
-		
-		a = new Entity();
-		a.addComponent(new ComponentCollBox(10, 10, new Vector2(200,200)));
-		entityman.addEntity(a);
-		
-		a = new Entity();
-		a.addComponent(new ComponentCollBox(10, 10, new Vector2(150,150)));
-		a.addComponent(new ComponentRender(ComponentRender.TYPE_WIREBOX, Color.RED, ""));
-		entityman.addEntity(a);
 	}
 	
 	public void update(float dt)
 	{
 		// Update the game logic
-		
+		mover.update(dt, entityman);
+		timer.update(dt, entityman);
+		killer.update(dt, entityman);
 		
 	}
 	
