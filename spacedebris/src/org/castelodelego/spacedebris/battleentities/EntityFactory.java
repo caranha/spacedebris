@@ -1,11 +1,11 @@
 package org.castelodelego.spacedebris.battleentities;
 
+import org.castelodelego.spacedebris.battlecomponents.ComponentAnimation;
 import org.castelodelego.spacedebris.battlecomponents.ComponentCollBox;
 import org.castelodelego.spacedebris.battlecomponents.ComponentDirection;
 import org.castelodelego.spacedebris.battlecomponents.ComponentInterface;
 import org.castelodelego.spacedebris.battlecomponents.ComponentKill;
 import org.castelodelego.spacedebris.battlecomponents.ComponentPosition;
-import org.castelodelego.spacedebris.battlecomponents.ComponentRender;
 import org.castelodelego.spacedebris.battlecomponents.ComponentTrigger;
 
 import com.badlogic.gdx.graphics.Color;
@@ -20,7 +20,10 @@ import com.badlogic.gdx.math.Vector2;
 public class EntityFactory {
 
 	
-	static public Entity createBullet(Vector2 pos, Vector2 dir, float size, float timetodie)
+	/**
+	 * Creates a simple bullet entity
+	 */
+	static public Entity createBullet(Vector2 pos, Vector2 dir, float timetodie, int size, Color tint)
 	{
 		Entity ret = new Entity();
 
@@ -30,7 +33,7 @@ public class EntityFactory {
 		ret.addComponent(new ComponentCollBox(size, size, pos));
 
 		// TODO: Replace color with team appropriate values
-		ret.addComponent(new ComponentRender(ComponentRender.TYPE_WIREBOX, Color.RED, ""));
+		ret.addComponent(new ComponentAnimation("animations/battlespace/bullet", tint));
 		
 		ComponentInterface[] add = {new ComponentKill()};
 		ret.addComponent(new ComponentTrigger(timetodie,add,null));

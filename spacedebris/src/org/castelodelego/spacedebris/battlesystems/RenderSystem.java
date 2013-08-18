@@ -2,14 +2,19 @@ package org.castelodelego.spacedebris.battlesystems;
 
 import java.util.ArrayList;
 
+import org.castelodelego.spacedebris.GdxGameMain;
 import org.castelodelego.spacedebris.battlecomponents.ComponentCollBox;
-import org.castelodelego.spacedebris.battlecomponents.ComponentRender;
+import org.castelodelego.spacedebris.battlecomponents.ComponentAnimation;
+import org.castelodelego.spacedebris.battlecomponents.ComponentPosition;
 import org.castelodelego.spacedebris.battlecomponents.ComponentType;
 import org.castelodelego.spacedebris.battleentities.Entity;
 import org.castelodelego.spacedebris.battleentities.EntityManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -24,7 +29,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
  */
 public class RenderSystem {
 
-	ShapeRenderer linedrawer;
+	// FIXME: Should the camera be really here?
+	ShapeRenderer linedrawer; // TODO: should this be global for the entire game?
 	OrthographicCamera c;
 
 	
@@ -36,46 +42,80 @@ public class RenderSystem {
 	}
 	
 
+	
 	/**
-	 * Renders all entities with a Renderer component, using two passes, one for Renderers of spritebatch type, another for 
-	 * rectangle renderers;
-	 * TODO: Consider separating the components into RendererSprite and Renderer Shape, or somehow ordering the list by 
-	 * Renderer Type.
-	 * @param m
+	 * This method, when called, renders a collision box for every entity that has one. 
+	 * This is a bit slow, and usually useful for debugging.
+	 * @param m The entity Manager
 	 */
-	public void RenderEntities(EntityManager m)
+	public void RenderCollBoxes(EntityManager m)
 	{
 
-		// ShapeRendererPass: // FIXME: for now I ignore the type of shapeRenderer, and rend all of them as a Shapetype.Line
-		
-		ComponentType[] filter = {ComponentType.COMP_RENDER, ComponentType.COMP_COLLBOX}; // I need a collisionBox to render - TODO: probably not true, decouple these.
+		ComponentType[] filter = { ComponentType.COMP_COLLBOX};
 		ArrayList<Entity> list = m.queryEntities(filter);
 
-		Gdx.app.debug("Number of Entities to render",list.size()+"");
-		
 		linedrawer.setProjectionMatrix(c.combined);
 		linedrawer.begin(ShapeType.Line);
+		linedrawer.setColor(Color.RED);
 		
-		ComponentRender renderer = null;
 		ComponentCollBox rectangle = null;		
 		for (int i = 0; i < list.size(); i++)
 		{
 			// getting the necessary components from the entity
-			renderer = (ComponentRender) list.get(i).getComponentByType(ComponentType.COMP_RENDER);
 			rectangle = (ComponentCollBox) list.get(i).getComponentByType(ComponentType.COMP_COLLBOX);
 
-			if (renderer == null || rectangle == null)
+			if (rectangle == null)
 			{
 				Gdx.app.error("Rendering Line Pass", "Failed to find necessary components after querying");
 				break;
-			}
-			
-			linedrawer.setColor(renderer.color);
+			}			
 			linedrawer.rect(rectangle.box.x, rectangle.box.y, rectangle.box.width, rectangle.box.height);			
 		}
 		linedrawer.end();
 		
 	}
+
+
+	public void RenderAnimations(EntityManager m, float dt) {
+		ComponentType[] filter = { ComponentType.COMP_POS, ComponentType.COMP_ANIM };
+		ArrayList<Entity> list = m.queryEntities(filter);
+		
+		GdxGameMain.batch.begin();
+
+		ComponentAnimation anim = null;
+		ComponentPosition pos = null;
+		Animation drawable = null;
+		TextureRegion texture = null;
+		
+		for (int i = 0; i < list.size(); i++)
+		{
+			// getting the necessary components from the entity
+			pos = (ComponentPosition) list.get(i).getComponentByType(ComponentType.COMP_POS);
+			anim = (ComponentAnimation) list.get(i).getComponentByType(ComponentType.COMP_ANIM);
+			drawable = GdxGameMain.animman.get(anim.spritename);
+			
+			if (drawable != null)
+			{
+				anim.time += dt;
+				texture = drawable.getKeyFrame(anim.time);
+				
+				if (anim.tint != null)
+					GdxGameMain.batch.setColor(anim.tint); // setting tint
+				
+				GdxGameMain.batch.draw(texture, pos.pos.x - texture.getRegionWidth()/2, pos.pos.y - texture.getRegionHeight()/2);
+				
+				if (anim.tint != null)
+					GdxGameMain.batch.setColor(Color.WHITE); // unsetting tint
+
+			}
+			else
+				Gdx.app.error("Resource Missing","Could not find the animation called "+anim.spritename);
+			
+		}
+		GdxGameMain.batch.end();
+		
+	}
+
 	
 	
 	

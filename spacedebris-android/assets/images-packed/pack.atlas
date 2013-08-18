@@ -1,0 +1,45 @@
+
+pack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+backgrounds/libgdx
+  rotate: false
+  xy: 484, 536
+  size: 511, 266
+  orig: 511, 266
+  offset: 0, 0
+  index: -1
+backgrounds/splash_vert
+  rotate: false
+  xy: 2, 2
+  size: 480, 800
+  orig: 480, 800
+  offset: 0, 0
+  index: -1
+
+pack2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+animations/battlespace/bullet
+  rotate: false
+  xy: 2, 2
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 1
+animations/battlespace/bullet
+  rotate: false
+  xy: 12, 2
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 2
+animations/battlespace/bullet
+  rotate: false
+  xy: 22, 2
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 3

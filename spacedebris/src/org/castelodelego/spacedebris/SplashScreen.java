@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -22,19 +23,24 @@ public class SplashScreen implements Screen {
 	float fade;
 	
 	boolean loaddone;
+	boolean loadAnimDone;
 	
 	public SplashScreen(int myid)
 	{
 		ID = myid;
 		
 		loaddone = false;
+		loadAnimDone = false;
+		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Constants.SCREEN_W, Constants.SCREEN_H);
 		
 		lineDrawer = new ShapeRenderer();
 		batch = new SpriteBatch();
 		
-		splashimg = new Texture(Gdx.files.internal("imgs/splash_vert.png"));
+		// Temporary, before the manager loads the imagepack
+		// TODO: replace splashimg with an image from the loader when it is done
+		splashimg = new Texture(Gdx.files.internal("images/backgrounds/splash_vert.png")); 
 		fade = 0;
 	}
 	
@@ -49,6 +55,10 @@ public class SplashScreen implements Screen {
 		// Set loading progress variables
 		loaddone = GdxGameMain.manager.update(); // true if all loading is finished	
 		//	loadprogress = GdxGameMain.manager.getProgress(); // 0-1 loading progress, if I need a loading bar
+		if (loaddone == true && loadAnimDone == false)
+		{	
+			loadAnimDone = GdxGameMain.animman.loadAnimations(GdxGameMain.manager.get("images-packed/pack.atlas", TextureAtlas.class));
+		}
 		
 		// splash screen fade crontrol
 		time = time+delta;		
@@ -56,7 +66,7 @@ public class SplashScreen implements Screen {
 		{
 			fade = time*2;
 		}
-		if (time > 1.5 && loaddone)
+		if (time > 1.5 && loaddone && loadAnimDone)
 		{
 			fade = fade - delta*3;
 		}

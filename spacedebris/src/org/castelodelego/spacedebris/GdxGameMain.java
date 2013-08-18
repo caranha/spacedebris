@@ -10,6 +10,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class GdxGameMain extends Game {
 
@@ -19,14 +20,15 @@ public class GdxGameMain extends Game {
 	static int SCREEN_BATTLE = 2;
 	
 	static Screen[] screenlist;
-	static AssetManager manager;
+	public static AssetManager manager;
+	public static AnimationManager animman;
 	
 	static int nextscreen;
 	static boolean changescreen;
 	
 	// Debug text display
 	BitmapFont debugtext;
-	SpriteBatch batch;
+	public static SpriteBatch batch;
 	
 	@Override
 	public void create() {		
@@ -34,7 +36,10 @@ public class GdxGameMain extends Game {
 		screenlist[SCREEN_SPLASH] = new SplashScreen(SCREEN_SPLASH);
 		screenlist[SCREEN_BATTLE] = new BattleScreen();
 		
+		// Creating global resource managers
 		queueAssets();
+		animman = new AnimationManager();
+		
 		setScreen(screenlist[SCREEN_SPLASH]);
 		
 		nextscreen = SCREEN_SPLASH;
@@ -72,6 +77,10 @@ public class GdxGameMain extends Game {
 		batch.begin();
 		debugtext.setColor(Color.YELLOW);
 		debugtext.draw(batch, "FPS: "+Gdx.graphics.getFramesPerSecond(), 5, 795);
+		
+		
+		
+		
 		batch.end();
 		
 	}
@@ -84,8 +93,9 @@ public class GdxGameMain extends Game {
 	{
 		manager = new AssetManager();
 		
-		// Do manage.load everything here
-
+		manager.load("images-packed/pack.atlas", TextureAtlas.class); // packed images
+		
+		
 	}
 	
 	/**
@@ -110,6 +120,14 @@ public class GdxGameMain extends Game {
 		return screenlist[index];
 	}
 	
+	/**
+	 * Gets the static spritebatch for this game
+	 * @return
+	 */
+	public static SpriteBatch getBatch()
+	{
+		return batch;
+	}
 	
 	/*
 	 * The methods below are super-methods for Game. I can override 

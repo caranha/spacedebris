@@ -13,10 +13,11 @@ public class BattleScreen implements Screen {
 
 	BattleManager bm;
 	
+	
 	public BattleScreen()
 	{
 		bm = new BattleManager();
-		bm.debugInit(1000);
+		bm.debugInit(50);
 	}
 	
 	@Override
@@ -36,6 +37,12 @@ public class BattleScreen implements Screen {
 		
 		// rendering the Battle Screen
 		bm.render(delta);
+		
+		
+		// DEBUG - playing with sprites
+		
+
+		
 	}
 
 	@Override
@@ -46,8 +53,8 @@ public class BattleScreen implements Screen {
 
 	@Override
 	public void show() {
+		
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

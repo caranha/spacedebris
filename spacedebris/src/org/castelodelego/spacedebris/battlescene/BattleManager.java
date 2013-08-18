@@ -3,11 +3,6 @@ package org.castelodelego.spacedebris.battlescene;
 import java.util.Random;
 
 import org.castelodelego.spacedebris.Constants;
-import org.castelodelego.spacedebris.battlecomponents.ComponentCollBox;
-import org.castelodelego.spacedebris.battlecomponents.ComponentDirection;
-import org.castelodelego.spacedebris.battlecomponents.ComponentPosition;
-import org.castelodelego.spacedebris.battlecomponents.ComponentRender;
-import org.castelodelego.spacedebris.battleentities.Entity;
 import org.castelodelego.spacedebris.battleentities.EntityFactory;
 import org.castelodelego.spacedebris.battleentities.EntityManager;
 import org.castelodelego.spacedebris.battlesystems.KillSystem;
@@ -15,7 +10,6 @@ import org.castelodelego.spacedebris.battlesystems.MoveSystem;
 import org.castelodelego.spacedebris.battlesystems.RenderSystem;
 import org.castelodelego.spacedebris.battlesystems.TriggerSystem;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
@@ -73,7 +67,9 @@ public class BattleManager {
 			float speed = (dice.nextFloat()*30)+1;
 			dir.x = (float) (Math.cos(orient)*speed);
 			dir.y = (float) (Math.sin(orient)*speed);
-			entityman.addEntity(EntityFactory.createBullet(pos, dir, dice.nextInt(10)+5, dice.nextFloat()*5+0.5f));
+			
+			Color tint = new Color(dice.nextFloat(),dice.nextFloat(),dice.nextFloat(),1f);			
+			entityman.addEntity(EntityFactory.createBullet(pos, dir, dice.nextFloat()*5+10f, dice.nextInt(10)+5, tint));
 		}
 		
 	}
@@ -94,7 +90,8 @@ public class BattleManager {
 	 */
 	public void render(float dt)
 	{
-		renderer.RenderEntities(entityman);
+		renderer.RenderCollBoxes(entityman);
+		renderer.RenderAnimations(entityman, dt);
 	}
 	
 }
