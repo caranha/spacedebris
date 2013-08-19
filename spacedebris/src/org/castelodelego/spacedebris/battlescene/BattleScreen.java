@@ -17,7 +17,7 @@ public class BattleScreen implements Screen {
 	public BattleScreen()
 	{
 		bm = new BattleManager();
-		bm.debugInit(50);
+		bm.debugInit(50000);
 	}
 	
 	@Override

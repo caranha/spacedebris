@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.castelodelego.spacedebris.GdxGameMain;
 import org.castelodelego.spacedebris.battlecomponents.ComponentCollBox;
 import org.castelodelego.spacedebris.battlecomponents.ComponentAnimation;
+import org.castelodelego.spacedebris.battlecomponents.ComponentInterface;
 import org.castelodelego.spacedebris.battlecomponents.ComponentPosition;
 import org.castelodelego.spacedebris.battlecomponents.ComponentType;
 import org.castelodelego.spacedebris.battleentities.Entity;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * System that renders the battlefield.
@@ -58,18 +60,18 @@ public class RenderSystem {
 		linedrawer.begin(ShapeType.Line);
 		linedrawer.setColor(Color.RED);
 		
+		Array<ComponentInterface> clist;
 		ComponentCollBox rectangle = null;		
 		for (int i = 0; i < list.size(); i++)
 		{
 			// getting the necessary components from the entity
-			rectangle = (ComponentCollBox) list.get(i).getComponentByType(ComponentType.COMP_COLLBOX);
-
-			if (rectangle == null)
-			{
-				Gdx.app.error("Rendering Line Pass", "Failed to find necessary components after querying");
-				break;
-			}			
-			linedrawer.rect(rectangle.box.x, rectangle.box.y, rectangle.box.width, rectangle.box.height);			
+			clist = list.get(i).getComponentByType(ComponentType.COMP_COLLBOX);
+			if (clist != null)
+				for (int j = 0; j < clist.size; j++)
+				{
+					rectangle = (ComponentCollBox) clist.get(j);
+					linedrawer.rect(rectangle.box.x, rectangle.box.y, rectangle.box.width, rectangle.box.height);			
+				}
 		}
 		linedrawer.end();
 		
@@ -84,14 +86,17 @@ public class RenderSystem {
 
 		ComponentAnimation anim = null;
 		ComponentPosition pos = null;
+		
 		Animation drawable = null;
 		TextureRegion texture = null;
 		
 		for (int i = 0; i < list.size(); i++)
 		{
 			// getting the necessary components from the entity
-			pos = (ComponentPosition) list.get(i).getComponentByType(ComponentType.COMP_POS);
-			anim = (ComponentAnimation) list.get(i).getComponentByType(ComponentType.COMP_ANIM);
+			// FIXME: assumes that there is only one position, and only one animation. Is this a reasonable assumption?
+			pos = (ComponentPosition) list.get(i).getComponentByType(ComponentType.COMP_POS).get(0);
+			anim = (ComponentAnimation) list.get(i).getComponentByType(ComponentType.COMP_ANIM).get(0);
+			
 			drawable = GdxGameMain.animman.get(anim.spritename);
 			
 			if (drawable != null)
